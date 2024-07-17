@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "type": "pwa-node",
+          "request": "launch",
+          "name": "Next.js: Node",
+          "runtimeExecutable": "next",
+          "runtimeArgs": ["dev"],
+          "cwd": "${workspaceFolder}",
+          "console": "integratedTerminal",
+          "internalConsoleOptions": "neverOpen",
+          "disableOptimisticBPs": true,
+          "sourceMaps": true,
+          "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/next",
+          "resolveSourceMapLocations": [
+              "${workspaceFolder}/**",
+              "!**/node_modules/**"
+          ]
+      }
+  ]
+}

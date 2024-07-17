@@ -1,0 +1,349 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+// prisma/schema.prisma
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id             String    @id @map("wallet_address")
+  name           String
+  username       String    @unique
+  bio            String?   @default("Unraveling every plot twist, no spoilers please.")
+  email          String    @unique
+  walletAddress  String    @unique
+  walletVerified DateTime?
+  image          String?
+  coverImage     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  loginNonce LoginNonce?
+
+  emailVerified     DateTime?
+  createdSubreddits Subreddit[]    @relation("CreatedBy")
+  subscriptions     Subscription[]
+  votes             Vote[]
+  accounts          Account[]
+  sessions          Session[]
+  Post              Post[]
+  Comment           Comment[]
+  CommentVote       CommentVote[]
+
+  @@index([username, walletAddress])
+}
+
+model LoginNonce {
+  userId  String   @id @default(uuid())
+  nonce   String
+  expires DateTime
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Tweet {
+  id                   String   @id @default(uuid()) @map("_id")
+  body                 String
+  mediaUrl             String?  // Optional media URL
+  mediaType            String?  // Optional media type (e.g., 'image', 'video', 'audio')
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  userEmail            String
+  likedUserEmails      String[]
+  bookmarkedUserEmails String[]
+  parentId             String?
+  commentIds           String[]
+}
+
+model Artistry {
+  id                 String  @id @default(uuid())
+  userId             String
+  title              String  @db.VarChar(255)
+  description        String? @db.Text
+  imageUrl           String? @db.Text
+  price              Float?
+  discountPercentage Float?
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  completeData        Json? // Complete data of a flix in JSON format
+  artistryDataUrl     String? // IPFS URL containing JSON of combined episode data of a Flix
+  artistryNftId       Int? // NFT ID of the flix
+  isNFT               Boolean              @default(false) // Determine if the flix is an NFT or normal
+  artistrySaleStatus  ArtistrySaleStatus   @default(NOT_FOR_SALE) // Sale status: Not on sale, or auction, or fixed sale, or for rent
+  artistrySaleDetails ArtistrySaleDetails? // Details about the sale, like price, initial bid, current bid, start and end time
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+enum ArtistrySaleStatus {
+  NOT_FOR_SALE
+  AUCTION
+  SALE
+}
+
+model ArtistrySaleDetails {
+  id                 String   @id @default(uuid())
+  price              Float?
+  bottomPrice        Float?
+  currentBid         Float?
+  timeLeft           Int? // in seconds
+  endTime            Json?
+  discountPercentage Float?
+  artistryId         String   @unique
+  artistry           Artistry @relation(fields: [artistryId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([artistryId])
+}
+
+model Category {
+  id       String     @id @default(uuid())
+  name     String     @unique
+  artistry Artistry[]
+}
+
+model Flix {
+  id                 String  @id @default(uuid())
+  userId             String
+  title              String  @db.VarChar(255)
+  description        String? @db.Text
+  imageUrl           String? @db.Text
+  price              Float?
+  isPublished        Boolean @default(false)
+  discountPercentage Float?
+
+  quicks Boolean @default(false)
+  shorts Boolean @default(false)
+
+  genreId String?
+  genre   Genre?  @relation(fields: [genreId], references: [id])
+
+  episodes Episode[]
+
+  completeData    Json? // Complete data of a flix in JSON format
+  flixDataUrl     String? // IPFS URL containing JSON of combined episode data of a Flix
+  flixNftId       Int? // NFT ID of the flix
+  isNFT           Boolean          @default(false) // Determine if the flix is an NFT or normal
+  flixSaleStatus  FlixSaleStatus   @default(STREAM) // Sale status: Not on sale, or auction, or fixed sale, or for rent
+  flixSaleDetails FlixSaleDetails? // Details about the sale, like price, initial bid, current bid, start and end time
+  finance         FlixFinance?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([genreId])
+}
+
+enum FlixSaleStatus {
+  STREAM
+  RENT
+  AUCTION
+  SALE
+}
+
+model FlixSaleDetails {
+  id                 String @id @default(uuid())
+  price              Float?
+  bottomPrice        Float?
+  currentBid         Float?
+  timeLeft           Int? // in seconds
+  endTime            Json?
+  discountPercentage Float?
+  flixId             String @unique
+  flix               Flix   @relation(fields: [flixId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([flixId])
+}
+
+model FlixFinance {
+  flixId String  @id
+  flix   Flix    @relation(fields: [flixId], references: [id], onDelete: Cascade)
+
+  budget      Float?
+  financeType String?
+  castAndCrew Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([flixId])
+}
+
+model Genre {
+  id    String @id @default(uuid())
+  name  String @unique
+  flixs Flix[]
+}
+
+model Episode {
+  id               String  @id @default(uuid())
+  title            String
+  imageUrl         String? @db.Text
+  shortdescription String? @db.Text
+  description      String? @db.Text
+  videoUrl         String? @db.Text
+  position         Int
+  isPublished      Boolean @default(false)
+  isFree           Boolean @default(false)
+
+  videoData VideoData?
+
+  flixId String
+  flix   Flix   @relation(fields: [flixId], references: [id], onDelete: Cascade)
+
+  completeEpisodeData Json? // Complete data of an episode in JSON format
+
+  userProgress UserProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([flixId])
+}
+
+model VideoData {
+  id         String  @id @default(uuid())
+  assetId    String
+  playbackId String?
+
+  episodeId String  @unique
+  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+}
+
+model UserProgress {
+  id     String @id @default(uuid())
+  userId String
+
+  episodeId String
+  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  isCompleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, episodeId])
+  @@index([episodeId])
+}
+
+enum VoteType {
+  UP
+  DOWN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subreddit {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+
+  creatorId   String?
+  Creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
+  subscribers Subscription[]
+
+  @@index([name])
+}
+
+model Subscription {
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  subreddit   Subreddit @relation(fields: [subredditId], references: [id])
+  subredditId String
+
+  @@id([userId, subredditId])
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  content     Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  subreddit   Subreddit @relation(fields: [subredditId], references: [id])
+  subredditId String
+  comments    Comment[]
+  votes       Vote[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+
+  replyToId String?
+  replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  replies   Comment[] @relation("ReplyTo")
+
+  votes     CommentVote[]
+  commentId String?
+}
+
+model Vote {
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  type   VoteType
+
+  @@id([userId, postId])
+}
+
+model CommentVote {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  type      VoteType
+
+  @@id([userId, commentId])
+}

@@ -1,0 +1,717 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_contractOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_marketplaceAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_startingBidPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_videoAdSpotPrice",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "AuctionResetEarly",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "bidder",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "bidAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			}
+		],
+		"name": "BillboardBidPlaced",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "claimer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "BoostClaimed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "totalBoostAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "viewsLeft",
+				"type": "uint256"
+			}
+		],
+		"name": "Boosted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "advertiser",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "spotsRemaining",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			}
+		],
+		"name": "VideoAdPlayed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "message",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "contentCreator",
+				"type": "address"
+			}
+		],
+		"name": "VideoAdResult",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "advertiser",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "spots",
+				"type": "uint256"
+			}
+		],
+		"name": "VideoAdSlotPurchased",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_adDetailsURL",
+				"type": "string"
+			}
+		],
+		"name": "bidForBillboardAd",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalBoostAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalViews",
+				"type": "uint256"
+			}
+		],
+		"name": "boostNFT",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "spots",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_adDetailsURL",
+				"type": "string"
+			}
+		],
+		"name": "buyVideoAdSlots",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "checkPendingWithdrawal",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "contentCreator",
+				"type": "address"
+			}
+		],
+		"name": "checkVideoAdAvailability",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "canDisplay",
+				"type": "bool"
+			},
+			{
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "calculatedAdCost",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "spotsRemaining",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "advertiser",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "claimBoostReward",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "contractOwner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "contentCreator",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "passedAdCost",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "spotsRemaining",
+				"type": "uint256"
+			}
+		],
+		"name": "displayAdAndUpdateEarnings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCurrentBillboardDetails",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "auctionEndTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "baseBid",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "bidderAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "bidAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "adDetailsURL",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Adware.BillboardBidder[3]",
+				"name": "topThreeBids",
+				"type": "tuple[3]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "initiateNewBillboardAuction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "isNFTBoosted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "listTodayTopBid",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "marketplaceContract",
+		"outputs": [
+			{
+				"internalType": "contract IMarketplace",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_newAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "modifyStartingBidPrice",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_newPrice",
+				"type": "uint256"
+			}
+		],
+		"name": "modifyVideoAdSpotPrice",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextAuctionEndTime",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "pendingWithdrawals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "platformWallet",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "resetAuctionEarly",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "retrieveActiveAds",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "advertiser",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "spotsRemaining",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "adDetailsURL",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Adware.VideoAdvertisement[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "retrieveSpecificUserAds",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "advertiser",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "spotsRemaining",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "adDetailsURL",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Adware.VideoAdvertisement[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_marketplaceAddress",
+				"type": "address"
+			}
+		],
+		"name": "setMarketplaceContract",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "startingBidPrice",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "todayBillboard",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "bidderAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "bidAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "videoAdSpotPrice",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "videoAdsQueue",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "advertiser",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "spotsRemaining",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdrawMyEarnings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "yesterdayBillboard",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "bidderAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "bidAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "adDetailsURL",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
