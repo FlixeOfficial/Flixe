@@ -92,4 +92,13 @@ Next, I plan to:
 - **Expand Features**: Introduce new tools for post-production, marketing, and distribution.
 - **Global Outreach**: Expand our platform to reach a global audience, providing support in multiple languages and currencies.
 
+## Smart Contracts. 
+
+| Contract      | Explorer Link                                      |
+|---------------|----------------------------------------------------|
+|`MARKETPLACE_CONTRACT` | [0x7ba208e727af537d208eb983710b40e6718ee014](https://testnet-explorer.thetatoken.org/account/0x7ba208e727af537d208eb983710b40e6718ee014)|
+|`ADWARE_CONTRACT` | [0x9753de0d95ec9081ddfa670c1d5379fdf4ecbd18](https://testnet-explorer.thetatoken.org/account/0x9753de0d95ec9081ddfa670c1d5379fdf4ecbd18)|
+|`CROWDFUNDING_CONTRACT` | [0x476d8209e8187d831beac258b6a939a5468a26fb](https://testnet-explorer.thetatoken.org/account/0x476d8209e8187d831beac258b6a939a5468a26fb)|
+|`LOANVAULT_CONTRACT` | [0xdcea599da145c792a062ed61a64a2bb044de8449](https://testnet-explorer.thetatoken.org/account/0xdcea599da145c792a062ed61a64a2bb044de8449)|
+
 [![Get Started](https://img.shields.io/badge/-Getting%20Started-blue?style=for-the-badge&logo=notion&logoColor=white)](https://Flixe-starter.notion.site/)
